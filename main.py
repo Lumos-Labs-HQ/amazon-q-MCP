@@ -9,7 +9,7 @@ Usage:
     Or with uv: uv run main.py
 """
 
-from src.doc_reader import mcp
+from src import mcp
 
 
 def main():
