@@ -5,6 +5,10 @@ HTTP_TIMEOUT = 30.0
 MAX_CONTENT_LENGTH = 10000000  # 10MB max content (no practical limit for testing)
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 
+# Agent configuration
+AGENT_MAX_PAGES = 10  # Maximum pages to visit during autonomous navigation
+AGENT_MAX_DEPTH = 3   # Maximum navigation depth
+
 # Elements to remove completely
 REMOVE_TAGS = [
     'script', 'style', 'nav', 'footer', 'header', 'aside',

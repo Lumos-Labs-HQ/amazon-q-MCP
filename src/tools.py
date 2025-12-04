@@ -8,7 +8,50 @@ import httpx
 from .server import mcp
 from .fetcher import fetch_url
 from .extractor import DocumentExtractor
-from .formatters import format_output
+from .formatters import format_output, format_agent_results
+from .agent import DocAgent
+from .config import AGENT_MAX_PAGES, AGENT_MAX_DEPTH
+
+
+@mcp.tool()
+async def search_documentation_intelligently(start_url: str, problem_description: str, max_pages: int = AGENT_MAX_PAGES) -> str:
+    """
+    Intelligently searches documentation by autonomously navigating pages to find relevant information.
+    
+    This tool acts as an autonomous agent that explores documentation sites, following relevant
+    links based on your problem description. It collects information from multiple pages and
+    returns comprehensive results ranked by relevance.
+    
+    Args:
+        start_url: Starting documentation URL (e.g., https://razorpay.com/docs)
+        problem_description: Description of your problem or what you're looking for
+        max_pages: Maximum number of pages to visit (default: 10)
+    
+    Returns:
+        Comprehensive documentation from multiple relevant pages
+    """
+    try:
+        parsed = urlparse(start_url)
+        if not parsed.scheme or not parsed.netloc:
+            return "Error: Invalid URL format. Please provide a complete URL"
+        
+        if not problem_description or len(problem_description.strip()) < 5:
+            return "Error: Please provide a meaningful problem description"
+        
+        if max_pages > 20:
+            max_pages = 20
+        
+        agent = DocAgent(max_pages=max_pages, max_depth=AGENT_MAX_DEPTH)
+        results = await agent.search(start_url, problem_description)
+        
+        return format_agent_results(results)
+        
+    except httpx.HTTPStatusError as e:
+        return f"Error: HTTP {e.response.status_code} - Failed to fetch starting URL: {start_url}"
+    except httpx.RequestError as e:
+        return f"Error: Failed to connect to URL: {start_url}. Details: {str(e)}"
+    except Exception as e:
+        return f"Error: Search failed. Details: {str(e)}"
 
 
 @mcp.tool()

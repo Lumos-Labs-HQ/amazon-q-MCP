@@ -89,7 +89,31 @@ Or with uv:
 
 ## Available Tools
 
-### 1. read_web_documentation
+### 1. search_documentation_intelligently ⭐ NEW
+
+**Autonomous agent that intelligently navigates documentation to find relevant information.**
+
+This tool acts as an autonomous agent that explores documentation sites by following relevant links based on your problem description. It visits multiple pages, collects information, and returns comprehensive results ranked by relevance.
+
+**Parameters:**
+- `start_url` (string, required): Starting documentation URL (e.g., https://razorpay.com/docs)
+- `problem_description` (string, required): Description of your problem or what you're looking for
+- `max_pages` (integer, optional): Maximum pages to visit (default: 10, max: 20)
+
+**Example:**
+```
+I'm having routing issues with Razorpay integration. Search https://razorpay.com/docs for information about routing configuration.
+```
+
+**How it works:**
+1. Starts at the provided URL
+2. Extracts keywords from your problem description
+3. Analyzes links and scores them by relevance
+4. Autonomously navigates to relevant pages (up to 3 levels deep)
+5. Collects and ranks content by relevance
+6. Returns comprehensive results from all relevant pages
+
+### 2. read_web_documentation
 
 Fetches and extracts clean documentation content from a web page.
 
@@ -102,7 +126,7 @@ Fetches and extracts clean documentation content from a web page.
 Read the documentation from https://docs.python.org/3/library/asyncio.html
 ```
 
-### 2. extract_code_examples
+### 3. extract_code_examples
 
 Extracts all code blocks from a documentation page.
 
@@ -114,7 +138,7 @@ Extracts all code blocks from a documentation page.
 Extract code examples from https://fastapi.tiangolo.com/tutorial/first-steps/
 ```
 
-### 3. get_page_structure
+### 4. get_page_structure
 
 Extracts the heading structure and table of contents from a documentation page.
 
@@ -126,7 +150,7 @@ Extracts the heading structure and table of contents from a documentation page.
 Get the structure of https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
 ```
 
-### 4. get_documentation_links
+### 5. get_documentation_links
 
 Extracts all links from a documentation page with optional filtering.
 
@@ -139,7 +163,7 @@ Extracts all links from a documentation page with optional filtering.
 Get all links from https://react.dev/learn containing "hooks"
 ```
 
-### 5. read_multiple_docs
+### 6. read_multiple_docs
 
 Reads multiple documentation pages and combines their content.
 
