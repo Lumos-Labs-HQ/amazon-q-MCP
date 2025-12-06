@@ -14,7 +14,6 @@ from src import mcp
 
 def main():
     """Start the MCP server."""
-    print("Starting Amazon Q Web Documentation Reader MCP Server...")
     mcp.run()
 
 

@@ -1,24 +1,71 @@
-# Amazon Q Web Documentation Reader - MCP Server
+<div align="center">
 
-A Model Context Protocol (MCP) server that enables Amazon Q to read and extract documentation from websites. This tool fetches web pages, extracts clean content, and provides it in a format optimized for AI consumption.
+# 🌐 Amazon Q Web Documentation Reader
 
-## Features
+### MCP Server for Intelligent Web Content Extraction
 
-- **Clean Content Extraction**: Removes navigation, ads, scripts, and other non-content elements
-- **Multiple Output Formats**: Supports both Markdown and plain text output
-- **Code Block Extraction**: Specifically extracts code examples from documentation
-- **Page Structure Analysis**: Extracts heading hierarchy and table of contents
-- **Link Discovery**: Finds and filters documentation links
-- **Batch Processing**: Read multiple documentation pages at once
+[![Python](https://img.shields.io/badge/Python-3.12+-3776ab?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-00d4aa?style=for-the-badge&logo=amazon&logoColor=white)](https://modelcontextprotocol.io)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-## Project Structure
+<p align="center">
+  <strong>A Model Context Protocol (MCP) server that enables Amazon Q to intelligently navigate and extract documentation from websites.</strong>
+  <br>
+  <em>Amazon Q uses Claude 4.5 to make smart decisions about which pages to visit and what content to extract.</em>
+</p>
+
+[Features](#-features) •
+[Installation](#-installation) •
+[Usage](#-usage) •
+[Tools](#-available-tools) •
+[Configuration](#%EF%B8%8F-configuration) •
+[Contributing](#-contributing)
+
+</div>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🧠 **Intelligent Navigation** | Amazon Q (Claude 4.5) decides which documentation pages to visit |
+| 🧹 **Clean Content Extraction** | Removes navigation, ads, scripts, and other non-content elements |
+| 📝 **Multiple Output Formats** | Supports both Markdown and plain text output |
+| 💻 **Code Block Extraction** | Specifically extracts code examples from documentation |
+| 📊 **Page Structure Analysis** | Extracts heading hierarchy and table of contents |
+| 🔗 **Link Discovery** | Finds and filters documentation links |
+| 📚 **Batch Processing** | Read multiple documentation pages at once |
+
+---
+
+## 🎯 How It Works
+
+```
+User: "I'm having issues with Razorpay routes"
+      Documentation: https://razorpay.com/docs
+
+Amazon Q (Claude 4.5):
+  1. Reads main docs page
+  2. Sees links: ["Payments", "Routes", "Webhooks", ...]
+  3. Intelligently decides: "Routes link is relevant!"
+  4. Navigates to Routes documentation
+  5. Extracts content and solves your problem
+
+All navigation decisions = Amazon Q's Claude brain 🧠
+MCP Server = Clean content extraction tool 🛠️
+```
+
+---
+
+## 📁 Project Structure
 
 ```
 amazon-q-web_search/
-├── main.py                 # Entry point
-├── pyproject.toml          # Project configuration
-├── README.md               # This file
-└── src/
+├── 📄 main.py              # Entry point
+├── 📄 pyproject.toml       # Project configuration
+├── 📄 README.md            # This file
+└── 📁 src/
     ├── __init__.py         # Package initialization
     ├── server.py           # MCP server initialization
     ├── config.py           # Configuration constants
@@ -28,41 +75,64 @@ amazon-q-web_search/
     └── tools.py            # MCP tool definitions
 ```
 
-## Installation
+---
 
-1. Clone the repository:
+## 📦 Installation
+
+### Prerequisites
+
+- Python 3.12 or higher
+- [uv](https://github.com/astral-sh/uv) (recommended) or pip
+
+### Quick Start
+
+**1. Clone the repository:**
+
 ```bash
-git clone <repository-url>
+git clone https://github.com/Lumos-Labs-HQ/amazon-q-web_search.git
 cd amazon-q-web_search
 ```
 
-2. Install dependencies using uv:
+**2. Install dependencies:**
+
+<details>
+<summary>Using uv (Recommended)</summary>
+
 ```bash
 uv sync
 ```
+</details>
 
-Or using pip:
+<details>
+<summary>Using pip</summary>
+
 ```bash
 pip install -e .
 ```
+</details>
 
-## Usage
+---
+
+## 🚀 Usage
 
 ### Running the Server
 
-Start the MCP server:
 ```bash
+# Using Python directly
 python main.py
-```
 
-Or with uv:
-```bash
+# Using uv
 uv run main.py
 ```
 
 ### Configuring with Amazon Q
 
-Add this server to your Amazon Q CLI configuration (`~/.config/amazonq/mcp.json`):
+Add this server to your Amazon Q CLI configuration:
+
+**📍 Configuration file:** `~/.config/amazonq/mcp.json`
+
+<details>
+<summary><strong>Using Python</strong></summary>
 
 ```json
 {
@@ -74,8 +144,11 @@ Add this server to your Amazon Q CLI configuration (`~/.config/amazonq/mcp.json`
   }
 }
 ```
+</details>
 
-Or with uv:
+<details>
+<summary><strong>Using uv</strong></summary>
+
 ```json
 {
   "mcpServers": {
@@ -86,129 +159,155 @@ Or with uv:
   }
 }
 ```
+</details>
 
-## Available Tools
+---
 
-### 1. search_documentation_intelligently ⭐ NEW
+## 🛠 Available Tools
 
-**Autonomous agent that intelligently navigates documentation to find relevant information.**
+> **Note**: Amazon Q intelligently chains these tools to navigate documentation and solve your problems. You don't need to call them individually - just describe your problem and provide a documentation URL!
 
-This tool acts as an autonomous agent that explores documentation sites by following relevant links based on your problem description. It visits multiple pages, collects information, and returns comprehensive results ranked by relevance.
+### 1️⃣ `read_web_documentation`
 
-**Parameters:**
-- `start_url` (string, required): Starting documentation URL (e.g., https://razorpay.com/docs)
-- `problem_description` (string, required): Description of your problem or what you're looking for
-- `max_pages` (integer, optional): Maximum pages to visit (default: 10, max: 20)
+> Fetches and extracts clean documentation content from a web page.
 
-**Example:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | ✅ | The URL of the documentation page |
+| `output_format` | string | ❌ | Output format: `"markdown"` (default) or `"text"` |
+
 ```
-I'm having routing issues with Razorpay integration. Search https://razorpay.com/docs for information about routing configuration.
-```
-
-**How it works:**
-1. Starts at the provided URL
-2. Extracts keywords from your problem description
-3. Analyzes links and scores them by relevance
-4. Autonomously navigates to relevant pages (up to 3 levels deep)
-5. Collects and ranks content by relevance
-6. Returns comprehensive results from all relevant pages
-
-### 2. read_web_documentation
-
-Fetches and extracts clean documentation content from a web page.
-
-**Parameters:**
-- `url` (string, required): The URL of the documentation page
-- `output_format` (string, optional): Output format - "markdown" (default) or "text"
-
-**Example:**
-```
-Read the documentation from https://docs.python.org/3/library/asyncio.html
+💡 Example: Read the documentation from https://docs.python.org/3/library/asyncio.html
 ```
 
-### 3. extract_code_examples
+---
 
-Extracts all code blocks from a documentation page.
+### 2️⃣ `extract_code_examples`
 
-**Parameters:**
-- `url` (string, required): The URL of the documentation page
+> Extracts all code blocks from a documentation page.
 
-**Example:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | ✅ | The URL of the documentation page |
+
 ```
-Extract code examples from https://fastapi.tiangolo.com/tutorial/first-steps/
-```
-
-### 4. get_page_structure
-
-Extracts the heading structure and table of contents from a documentation page.
-
-**Parameters:**
-- `url` (string, required): The URL of the documentation page
-
-**Example:**
-```
-Get the structure of https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
+💡 Example: Extract code examples from https://fastapi.tiangolo.com/tutorial/first-steps/
 ```
 
-### 5. get_documentation_links
+---
 
-Extracts all links from a documentation page with optional filtering.
+### 3️⃣ `get_page_structure`
 
-**Parameters:**
-- `url` (string, required): The URL of the documentation page
-- `filter_pattern` (string, optional): Pattern to filter links (e.g., "api", "guide")
+> Extracts the heading structure and table of contents from a documentation page.
 
-**Example:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | ✅ | The URL of the documentation page |
+
 ```
-Get all links from https://react.dev/learn containing "hooks"
-```
-
-### 6. read_multiple_docs
-
-Reads multiple documentation pages and combines their content.
-
-**Parameters:**
-- `urls` (array of strings, required): List of documentation URLs (max 10)
-
-**Example:**
-```
-Read documentation from these URLs:
-- https://docs.python.org/3/library/asyncio.html
-- https://docs.python.org/3/library/typing.html
+💡 Example: Get the structure of https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
 ```
 
-## Configuration
+---
 
-Edit `src/config.py` to customize:
+### 4️⃣ `get_documentation_links`
 
-- `HTTP_TIMEOUT`: Request timeout in seconds (default: 30.0)
-- `MAX_CONTENT_LENGTH`: Maximum content size in bytes (default: 500KB)
-- `USER_AGENT`: HTTP User-Agent string
-- `REMOVE_TAGS`: HTML tags to remove during extraction
-- `REMOVE_PATTERNS`: CSS class/ID patterns to remove
-- `CONTENT_SELECTORS`: Selectors for finding main content
+> Extracts all links from a documentation page with optional filtering.
 
-## Architecture
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | ✅ | The URL of the documentation page |
+| `filter_pattern` | string | ❌ | Pattern to filter links (e.g., `"api"`, `"guide"`) |
+
+```
+💡 Example: Get all links from https://react.dev/learn containing "hooks"
+```
+
+---
+
+### 5️⃣ `read_multiple_docs`
+
+> Reads multiple documentation pages and combines their content.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `urls` | array | ✅ | List of documentation URLs (max 10) |
+
+```
+💡 Example: Read documentation from multiple Python library pages
+```
+
+---
+
+## ⚙️ Configuration
+
+Edit `src/config.py` to customize behavior:
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `HTTP_TIMEOUT` | 30.0s | Request timeout in seconds |
+| `MAX_CONTENT_LENGTH` | 500KB | Maximum content size in bytes |
+| `USER_AGENT` | Custom | HTTP User-Agent string |
+| `REMOVE_TAGS` | Various | HTML tags to remove during extraction |
+| `REMOVE_PATTERNS` | Various | CSS class/ID patterns to remove |
+| `CONTENT_SELECTORS` | Various | Selectors for finding main content |
+
+---
+
+## 🏗 Architecture
 
 ### Module Responsibilities
 
-- **server.py**: Initializes the FastMCP server instance
-- **config.py**: Centralized configuration constants
-- **fetcher.py**: Handles HTTP requests with proper headers and error handling
-- **extractor.py**: Contains the `DocumentExtractor` class for parsing HTML and extracting content
-- **formatters.py**: Formats extracted data for Amazon Q consumption
-- **tools.py**: Defines all MCP tools and their implementations
+```mermaid
+graph LR
+    A[main.py] --> B[server.py]
+    B --> C[tools.py]
+    C --> D[fetcher.py]
+    C --> E[extractor.py]
+    C --> F[formatters.py]
+    G[config.py] --> D
+    G --> E
+```
 
-### Content Extraction Process
+| Module | Responsibility |
+|--------|----------------|
+| `server.py` | Initializes the FastMCP server instance |
+| `config.py` | Centralized configuration constants |
+| `fetcher.py` | Handles HTTP requests with proper headers and error handling |
+| `extractor.py` | Contains the `DocumentExtractor` class for parsing HTML |
+| `formatters.py` | Formats extracted data for Amazon Q consumption |
+| `tools.py` | Defines all MCP tools that Amazon Q uses for navigation |
 
-1. **Fetch**: HTTP request with proper headers and timeout
-2. **Parse**: BeautifulSoup parses HTML into a DOM tree
-3. **Clean**: Remove scripts, styles, navigation, ads, etc.
-4. **Extract**: Find main content container using common selectors
-5. **Convert**: Transform to Markdown or plain text
-6. **Format**: Add metadata and structure for Amazon Q
+### Content Extraction Pipeline
 
-## Development
+```
+📥 Fetch → 🔍 Parse → 🧹 Clean → 📄 Extract → 🔄 Convert → 📤 Format
+```
+
+1. **Fetch** — HTTP request with proper headers and timeout
+2. **Parse** — BeautifulSoup parses HTML into a DOM tree
+3. **Clean** — Remove scripts, styles, navigation, ads, etc.
+4. **Extract** — Find main content container using common selectors
+5. **Convert** — Transform to Markdown or plain text
+6. **Format** — Add metadata and structure for Amazon Q
+
+### Intelligent Navigation Flow
+
+```
+User Problem + Docs URL
+        ↓
+Amazon Q (Claude 4.5) decides what to do
+        ↓
+Calls MCP tools to navigate
+        ↓
+MCP Server extracts clean content
+        ↓
+Amazon Q uses content to solve problem
+```
+
+---
+
+## 🧪 Development
 
 ### Adding New Tools
 
@@ -217,7 +316,9 @@ Edit `src/config.py` to customize:
 3. Add proper docstrings for Amazon Q to understand the tool
 4. Handle errors gracefully with user-friendly messages
 
-Example:
+<details>
+<summary><strong>📝 Example Tool Template</strong></summary>
+
 ```python
 @mcp.tool()
 async def my_new_tool(url: str, param: str = "default") -> str:
@@ -237,24 +338,15 @@ async def my_new_tool(url: str, param: str = "default") -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 ```
-
-### Modifying Extraction Logic
-
-Edit `src/extractor.py` to customize:
-- Content selectors
-- Cleaning rules
-- Extraction methods
-- Output formats
+</details>
 
 ### Testing
 
-Test the server import:
 ```bash
-python -c "from src import mcp; print('Server:', mcp.name); print('Tools:', len(mcp._tool_manager._tools))"
-```
+# Test server import
+python -c "from src import mcp; print('Server:', mcp.name)"
 
-Test a specific tool:
-```bash
+# Test a specific tool
 python -c "
 from src import mcp
 import asyncio
@@ -269,40 +361,70 @@ asyncio.run(test())
 "
 ```
 
-## Dependencies
+---
 
-- **httpx**: Async HTTP client for fetching web pages
-- **beautifulsoup4**: HTML parsing and navigation
-- **lxml**: Fast XML/HTML parser
-- **markdownify**: HTML to Markdown conversion
-- **mcp**: Model Context Protocol SDK
+## 📚 Dependencies
 
-## Error Handling
+| Package | Purpose |
+|---------|---------|
+| [httpx](https://www.python-httpx.org/) | Async HTTP client for fetching web pages |
+| [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/) | HTML parsing and navigation |
+| [lxml](https://lxml.de/) | Fast XML/HTML parser |
+| [markdownify](https://github.com/matthewwithanm/python-markdownify) | HTML to Markdown conversion |
+| [mcp](https://modelcontextprotocol.io/) | Model Context Protocol SDK |
 
-The server handles various error scenarios:
-- Invalid URLs
-- HTTP errors (404, 500, etc.)
-- Connection timeouts
-- Content too large
-- Parsing failures
+---
+
+## ⚠️ Limitations
+
+| Limit | Value |
+|-------|-------|
+| Maximum content size | 500KB per page |
+| Maximum URLs per batch | 10 |
+| Request timeout | 30 seconds |
+| Content type | HTML only |
+
+---
+
+## 🚨 Error Handling
+
+The server gracefully handles:
+
+- ❌ Invalid URLs
+- ❌ HTTP errors (404, 500, etc.)
+- ❌ Connection timeouts
+- ❌ Content too large
+- ❌ Parsing failures
 
 All errors return user-friendly messages to Amazon Q.
 
-## Limitations
+---
 
-- Maximum content size: 500KB per page
-- Maximum URLs per batch: 10
-- Request timeout: 30 seconds
-- Only processes HTML content
+## 📄 License
 
-## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-[Add your license here]
+---
 
-## Contributing
+## 🤝 Contributing
 
-[Add contribution guidelines here]
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Support
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-[Add support information here]
+---
+
+## 💬 Support
+
+- 📫 Open an [Issue](https://github.com/Lumos-Labs-HQ/amazon-q-web_search/issues) for bug reports or feature requests
+- ⭐ Star this repo if you find it useful!
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/Lumos-Labs-HQ">Lumos Labs HQ</a></sub>
+</div>
